@@ -40,9 +40,10 @@ echo "🔧 Using Ollama host: $OLLAMA_HOST"
 echo "👤 Using user: $USER"
 
 # Check if old containers exist and remove them
-if [ $($CONTAINER_CMD ps -aq -f name=mem0_ui) ]; then
-  echo "⚠️ Found existing container 'mem0_ui'. Removing it..."
-  $CONTAINER_CMD rm -f mem0_ui
+echo "🧹 Cleaning up old containers..."
+if [ $($CONTAINER_CMD ps -aq -f name=openmemory-ollama) ]; then
+  echo "⚠️ Found existing containers. Removing them..."
+  $CONTAINER_CMD rm -f $($CONTAINER_CMD ps -aq -f name=openmemory-ollama)
 fi
 
 # Create .env file if it doesn't exist
@@ -72,7 +73,7 @@ sleep 15
 echo "📥 Pulling required Ollama models (this may take 5-10 minutes)..."
 
 # Get the exact Ollama container name
-OLLAMA_CONTAINER=$($CONTAINER_CMD ps --format "{{.Names}}" | grep "ollama_1$" | head -1)
+OLLAMA_CONTAINER=$($CONTAINER_CMD ps --format "{{.Names}}" | grep "ollama" | grep -v "mcp" | head -1)
 
 echo "🔄 Pulling gemma3:1b (LLM)..."
 $CONTAINER_CMD exec $OLLAMA_CONTAINER ollama pull gemma3:1b

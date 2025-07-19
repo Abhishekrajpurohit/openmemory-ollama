@@ -16,7 +16,7 @@ fi
 
 # Function to check if Ollama container is running and get container name
 check_ollama_running() {
-    OLLAMA_CONTAINER=$($CONTAINER_CMD ps --format "{{.Names}}" | grep "ollama_1$" | head -1)
+    OLLAMA_CONTAINER=$($CONTAINER_CMD ps --format "{{.Names}}" | grep "ollama" | grep -v "mcp" | head -1)
     if [ -z "$OLLAMA_CONTAINER" ]; then
         echo "❌ Ollama container is not running. Please start the services first:"
         echo "   $COMPOSE_CMD up -d"
